@@ -50,15 +50,15 @@ public class RedisMessageOperator implements MessageOperator {
 	public static final String CHANNEL_ATTRIBUTECHANGE_RELOAD = "__keyevent__:attribute_change_reload";
 	public static final String CHANNEL_ATTRIBUTECHANGE = "__keyevent__:attribute_change";
 	public static final String CHANNEL_ATTRIBUTECHANGE_DEL = "__keyevent__:attribute_del";
-	public Pool<Jedis> jedisPoolAbstract;
+	public Pool<Jedis> jedisPool;
 	public static Logger logger = LoggerFactory.getLogger(RedisMessageOperator.class);
 
 	public RedisMessageOperator(Serializer serializer, SessionStore sessionStore,
-			AbstractDistributedSessionManager abstractDistributedSessionManager, Pool<Jedis> jedisPoolAbstract) {
+			AbstractDistributedSessionManager abstractDistributedSessionManager, Pool<Jedis> jedisPool) {
 		this.serializer = serializer;
 		this.sessionStore = sessionStore;
 		this.abstractDistributedSessionManager = abstractDistributedSessionManager;
-		this.jedisPoolAbstract = jedisPoolAbstract;
+		this.jedisPool = jedisPool;
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class RedisMessageOperator implements MessageOperator {
 		new Thread(() -> {
 				Jedis jedis = null;
 				try {
-					jedis = jedisPoolAbstract.getResource();
+					jedis = jedisPool.getResource();
 					config(jedis);
 					CHANNEL_EXPIRED = CHANNEL_EXPIRED.replace("database",jedis.getDB()+"");
 					CHANNEL_DEL = CHANNEL_DEL.replace("database",jedis.getDB()+"");
@@ -177,7 +177,7 @@ public class RedisMessageOperator implements MessageOperator {
 
 	@Override
 	public void sendMessageToDel(String sessionkey, String attributeName) {
-		Jedis jedis = jedisPoolAbstract.getResource();
+		Jedis jedis = jedisPool.getResource();
 		try {
 			Pipeline pipeline = jedis.pipelined();
 			pipeline.hdel(sessionkey, attributeName);
@@ -193,7 +193,7 @@ public class RedisMessageOperator implements MessageOperator {
 
 	@Override
 	public void sendMessageToSet(String sessionkey, String attributeName, Object attributeValue) {
-		Jedis jedis = jedisPoolAbstract.getResource();
+		Jedis jedis = jedisPool.getResource();
 		try {
 			Pipeline pipeline = jedis.pipelined();
 			pipeline.hset(sessionkey.getBytes(), attributeName.getBytes(), serializer.serialize(attributeValue));

@@ -44,7 +44,7 @@ import redis.clients.jedis.util.Pool;
  * @email: suxuan696@gmail.com
  */
 public final class DistributedSessionRedisUtil {
-		private static Logger logger = LoggerFactory.getLogger(DistributedSessionRedisUtil.class);
+	 private static Logger logger = LoggerFactory.getLogger(DistributedSessionRedisUtil.class);
     private static Pool<Jedis> jedisPool = null;
     /**
      * 初始化Redis连接池

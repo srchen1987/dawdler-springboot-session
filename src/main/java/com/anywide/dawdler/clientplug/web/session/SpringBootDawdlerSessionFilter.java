@@ -41,6 +41,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import com.anywide.dawdler.clientplug.web.session.base.SessionIdGeneratorBase;
@@ -48,6 +49,7 @@ import com.anywide.dawdler.clientplug.web.session.base.StandardSessionIdGenerato
 import com.anywide.dawdler.clientplug.web.session.http.DawdlerHttpSession;
 import com.anywide.dawdler.clientplug.web.session.message.MessageOperator;
 import com.anywide.dawdler.clientplug.web.session.message.RedisMessageOperator;
+import com.anywide.dawdler.clientplug.web.session.store.DistributedSessionRedisUtil;
 import com.anywide.dawdler.clientplug.web.session.store.RedisSessionStore;
 import com.anywide.dawdler.clientplug.web.session.store.SessionStore;
 import com.anywide.dawdler.core.serializer.SerializeDecider;
@@ -55,6 +57,7 @@ import com.anywide.dawdler.core.serializer.Serializer;
 import com.anywide.dawdler.util.DawdlerTool;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.util.Pool;
 /**
  * 
@@ -81,10 +84,8 @@ public class SpringBootDawdlerSessionFilter implements Filter {
 	private Serializer serializer;
 	private SessionStore sessionStore;
 	private SessionOperator sessionOperator;
-	@Resource
-	private RedisConnectionFactory redisConnectionFactory;
-	private Pool<Jedis> jedisPoolAbstract;
 	private MessageOperator messageOperator;
+	private Pool<Jedis> jedisPool;
 	
 	static {
 		String filePath = DawdlerTool.getcurrentPath() + "identityConfig.properties";
@@ -101,7 +102,6 @@ public class SpringBootDawdlerSessionFilter implements Filter {
 		} 
 		
 			Properties ps = new Properties();
-			
 			try {
 			
 				ps.load(inStream);
@@ -162,19 +162,12 @@ public class SpringBootDawdlerSessionFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
+		jedisPool = DistributedSessionRedisUtil.getJedisPool();
 		servletContext = filterConfig.getServletContext();
-		Field field;
-		try {
-			field = redisConnectionFactory.getClass().getDeclaredField("pool");
-			field.setAccessible(true);
-			jedisPoolAbstract = (Pool<Jedis>) field.get(redisConnectionFactory);
-		} catch (Exception e) {
-			throw new ServletException(e);
-		}
 		abstractDistributedSessionManager = new DistributedCaffeineSessionManager(maxInactiveInterval, maxSize);
 		serializer = SerializeDecider.decide((byte) 2);//默认为kroy 需要其他的可以自行扩展
-		sessionStore = new RedisSessionStore(jedisPoolAbstract, serializer);  
-		messageOperator = new RedisMessageOperator(serializer, sessionStore, abstractDistributedSessionManager, jedisPoolAbstract);
+		sessionStore = new RedisSessionStore(jedisPool, serializer);  
+		messageOperator = new RedisMessageOperator(serializer, sessionStore, abstractDistributedSessionManager, jedisPool);
 		sessionOperator = new SessionOperator(abstractDistributedSessionManager, sessionStore, messageOperator, serializer, servletContext);
 		messageOperator.listenExpireAndDelAndChange(); 
 	}
@@ -279,9 +272,5 @@ public class SpringBootDawdlerSessionFilter implements Filter {
 
 	@Override
 	public void destroy() {
-		if(jedisPoolAbstract != null) {
-			jedisPoolAbstract.close();
-		}
-
 	}
 }
