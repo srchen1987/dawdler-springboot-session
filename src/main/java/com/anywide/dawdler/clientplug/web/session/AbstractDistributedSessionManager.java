@@ -17,26 +17,38 @@
 package com.anywide.dawdler.clientplug.web.session;
 
 import com.anywide.dawdler.clientplug.web.session.http.DawdlerHttpSession;
+
+import javax.servlet.http.HttpSessionListener;
+
 /**
- * 
- * @Title:  AbstractDistributedSessionManager.java
- * @Description:    抽象分布式session管理器
- * @author: jackson.song    
- * @date:   2016年6月16日  
- * @version V1.0 
- * @email: suxuan696@gmail.com
+ * @author jackson.song
+ * @version V1.0
+ * @Title AbstractDistributedSessionManager.java
+ * @Description 抽象分布式session管理器
+ * @date 2016年6月16日
+ * @email suxuan696@gmail.com
  */
 public abstract class AbstractDistributedSessionManager {
-	
-	public abstract DawdlerHttpSession getSession(String sessionkey);
-	
-	public abstract void close();
- 
-	public abstract void removeSession(String sessionkey);
+    public static final String DISTRIBUTED_SESSION_HTTPSESSION_LISTENER = "distributed_session_httpsession_listener";
+    protected HttpSessionListener httpSessionListener;//session监听器 目前只监听 创建session 销毁session
 
-	public abstract void removeSession(DawdlerHttpSession dawdlerHttpSession);
-	
-	public abstract void addSession(String sessionkey,DawdlerHttpSession dawdlerHttpSession);
+    public HttpSessionListener getHttpSessionListener() {
+        return httpSessionListener;
+    }
+
+    public void setHttpSessionListener(HttpSessionListener httpSessionListener) {
+        this.httpSessionListener = httpSessionListener;
+    }
+
+    public abstract DawdlerHttpSession getSession(String sessionKey);
+
+    public abstract void close();
+
+    public abstract void removeSession(String sessionKey);
+
+    public abstract void removeSession(DawdlerHttpSession dawdlerHttpSession);
+
+    public abstract void addSession(String sessionKey, DawdlerHttpSession dawdlerHttpSession);
 
 
 }
