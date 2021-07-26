@@ -30,7 +30,7 @@ import com.anywide.dawdler.clientplug.web.session.DawdlerSessionFilter;
  * @date 2019年11月21日
  * @email suxuan696@gmail.com
  */
-@Configuration
+//@Configuration
 public class FilterConfig {
 	@Resource
 	DawdlerSessionFilter dawdlerSessionFilter;
