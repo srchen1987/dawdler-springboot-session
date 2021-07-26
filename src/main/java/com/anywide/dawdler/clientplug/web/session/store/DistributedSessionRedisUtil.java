@@ -16,13 +16,6 @@
  */
 package com.anywide.dawdler.clientplug.web.session.store;
 
-import com.anywide.dawdler.clientplug.web.session.DawdlerSessionFilter;
-import com.anywide.dawdler.util.DawdlerTool;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import redis.clients.jedis.*;
-import redis.clients.jedis.util.Pool;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,6 +25,19 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.anywide.dawdler.clientplug.web.session.DawdlerSessionFilter;
+import com.anywide.dawdler.util.DawdlerTool;
+
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.JedisSentinelPool;
+import redis.clients.jedis.Protocol;
+import redis.clients.util.Pool;
 
 /**
  * @author jackson.song
@@ -51,7 +57,7 @@ public final class DistributedSessionRedisUtil {
 
 	static {
 		String env = System.getProperty("spring.profiles.active");
-		String fileName =  "session-redis" + (env != null ? env : "") + ".properties";
+		String fileName =  "session-redis-" + (env != null ? env : "") + ".properties";
 		String filePath = DawdlerTool.getcurrentPath() +fileName;
 		File file = new File(filePath);
 		InputStream inStream = null;
@@ -64,6 +70,7 @@ public final class DistributedSessionRedisUtil {
 				} catch (FileNotFoundException e) {
 				}
 			}
+			System.out.println("inStream:"+inStream);
 			ps.load(inStream);
 			String addr = ps.get("addr").toString();
 			String auth = ps.get("auth").toString();
@@ -132,6 +139,9 @@ public final class DistributedSessionRedisUtil {
 
 	public static Pool<Jedis> getJedisPool() {
 		return jedisPool;
+	}
+	public static void main(String[] args) {
+		System.out.println(DistributedSessionRedisUtil.getJedisPool());
 	}
 
 }

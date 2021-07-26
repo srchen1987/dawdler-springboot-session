@@ -16,12 +16,12 @@
  */
 package com.anywide.dawdler.clientplug.web.session;
 
+import java.util.concurrent.TimeUnit;
+
+
 import com.anywide.dawdler.clientplug.web.session.http.DawdlerHttpSession;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
-import org.checkerframework.checker.nullness.qual.NonNull;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author jackson.song
@@ -50,7 +50,7 @@ public class DistributedCaffeineSessionManager extends AbstractDistributedSessio
         return maxInactiveInterval;
     }
 
-    private DawdlerHttpSession createExpensiveGraph(@NonNull String key) {
+    private DawdlerHttpSession createExpensiveGraph(String key) {
         return null;
     }
 
