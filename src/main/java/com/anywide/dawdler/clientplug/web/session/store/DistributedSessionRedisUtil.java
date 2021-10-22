@@ -56,7 +56,7 @@ public final class DistributedSessionRedisUtil {
 	private static Pool<Jedis> jedisPool = null;
 
 	static {
-		String env = System.getProperty("spring.profiles.active");
+		String env = "testk8s";//System.getProperty("spring.profiles.active");
 		String fileName =  "session-redis-" + (env != null ? env : "") + ".properties";
 		String filePath = DawdlerTool.getcurrentPath() +fileName;
 		File file = new File(filePath);
@@ -70,11 +70,8 @@ public final class DistributedSessionRedisUtil {
 				} catch (FileNotFoundException e) {
 				}
 			}
-			System.out.println("inStream:"+inStream);
 			ps.load(inStream);
-			String addr = ps.get("addr").toString();
 			String auth = ps.get("auth").toString();
-			int port = Integer.parseInt(ps.get("port").toString());
 			int database = getIfNullReturnDefaultValueInt("database", 0);
 			int max_idle = getIfNullReturnDefaultValueInt("max_idle", JedisPoolConfig.DEFAULT_MAX_IDLE);
 			long max_wait = getIfNullReturnDefaultValueLong("max_wait", JedisPoolConfig.DEFAULT_MAX_WAIT_MILLIS);
@@ -98,6 +95,8 @@ public final class DistributedSessionRedisUtil {
 				Set<String> sentinelsSet = Arrays.stream(sentinelsArray).collect(Collectors.toSet());
 				jedisPool = new JedisSentinelPool(masterName, sentinelsSet, poolConfig, timeout, auth, database);
 			} else {
+				String addr = ps.get("addr").toString();
+				int port = Integer.parseInt(ps.get("port").toString());
 				jedisPool = new JedisPool(poolConfig, addr, port, timeout, auth, database);
 			}
 		} catch (Exception e) {
@@ -139,9 +138,6 @@ public final class DistributedSessionRedisUtil {
 
 	public static Pool<Jedis> getJedisPool() {
 		return jedisPool;
-	}
-	public static void main(String[] args) {
-		System.out.println(DistributedSessionRedisUtil.getJedisPool());
 	}
 
 }
