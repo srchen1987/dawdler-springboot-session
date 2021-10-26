@@ -254,12 +254,12 @@ public class DawdlerSessionFilter implements Filter {
 			if (session == null) {
 				String sessionKey;
 				String token = request.getParameter("token");
-				if(token != null) {
+				if (token != null) {
 					sessionKey = token;
-				}else {
+				} else {
 					sessionKey = getCookieValue(request.getCookies(), cookieName);
 				}
-				
+
 				if (sessionKey != null) {
 					try {
 						session = sessionOperator.operationSession(sessionKey, maxInactiveInterval);
