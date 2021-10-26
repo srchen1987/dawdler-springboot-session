@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>dawdler</groupId>
   <artifactId>dawdler-springboot-session</artifactId>
-  <version>0.0.5-RELEASES</version>
+  <version>0.0.8-RELEASES</version>
   	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
