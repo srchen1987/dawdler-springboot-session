@@ -56,8 +56,8 @@ public final class DistributedSessionRedisUtil {
 	private static Pool<Jedis> jedisPool = null;
 
 	static {
-		String env = "testk8s";//System.getProperty("spring.profiles.active");
-		String fileName =  "session-redis-" + (env != null ? env : "") + ".properties";
+		String env = System.getProperty("spring.profiles.active");//"testk8s";//
+		String fileName =  "session-redis" + (env != null ? "-"+env : "") + ".properties";
 		String filePath = DawdlerTool.getcurrentPath() +fileName;
 		File file = new File(filePath);
 		InputStream inStream = null;

@@ -79,8 +79,8 @@ public class RedisMessageOperator implements MessageOperator {
 
 	@Override
 	public void listenExpireAndDelAndChange() {
-		new Thread(() -> {
-			while(true) {
+		Thread thread = new Thread(() -> {
+			while (true) {
 				Jedis jedis = null;
 				try {
 					jedis = jedisPool.getResource();
@@ -88,7 +88,7 @@ public class RedisMessageOperator implements MessageOperator {
 					CHANNEL_EXPIRED = CHANNEL_EXPIRED.replace("database", jedis.getDB() + "");
 					CHANNEL_DEL = CHANNEL_DEL.replace("database", jedis.getDB() + "");
 					subscribe(jedis);
-				}catch (Exception e) {
+				} catch (Exception e) {
 					logger.error("", e);
 					if (jedis != null)
 						try {
@@ -96,12 +96,15 @@ public class RedisMessageOperator implements MessageOperator {
 						} catch (Exception e1) {
 						}
 					try {
-						Thread.sleep(1);
+						Thread.sleep(1000);
 					} catch (InterruptedException e1) {
 					}
+					abstractDistributedSessionManager.invalidateAll();
 				}
 			}
-		}).start();
+		});
+		thread.setDaemon(true);
+		thread.start();
 	}
 	
 	
