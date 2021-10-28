@@ -56,7 +56,7 @@ import com.anywide.dawdler.core.serializer.Serializer;
 import com.anywide.dawdler.util.DawdlerTool;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.util.Pool;
+import redis.clients.util.Pool;
 
 /**
  * @author jackson.song
