@@ -30,8 +30,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @date 2016年6月16日
  * @email suxuan696@gmail.com
  */
-public abstract class SessionIdGeneratorBase
-        implements SessionIdGenerator {
+public abstract class SessionIdGeneratorBase implements SessionIdGenerator {
     private final Queue<SecureRandom> randoms = new ConcurrentLinkedQueue();
     private String secureRandomClass = null;
     private String secureRandomAlgorithm = "SHA1PRNG";
@@ -51,11 +50,9 @@ public abstract class SessionIdGeneratorBase
         return secureRandomAlgorithm;
     }
 
-
     public void setSecureRandomAlgorithm(String secureRandomAlgorithm) {
         this.secureRandomAlgorithm = secureRandomAlgorithm;
     }
-
 
     public String getSecureRandomProvider() {
         return secureRandomProvider;
@@ -65,12 +62,10 @@ public abstract class SessionIdGeneratorBase
         this.secureRandomProvider = secureRandomProvider;
     }
 
-
     @Override
     public String getJvmRoute() {
         return jvmRoute;
     }
-
 
     @Override
     public void setJvmRoute(String jvmRoute) {
@@ -82,7 +77,6 @@ public abstract class SessionIdGeneratorBase
         return sessionIdLength;
     }
 
-
     @Override
     public void setSessionIdLength(int sessionIdLength) {
         this.sessionIdLength = sessionIdLength;
@@ -93,7 +87,6 @@ public abstract class SessionIdGeneratorBase
         return generateSessionId(jvmRoute);
     }
 
-
     protected void getRandomBytes(byte[] bytes) {
 
         SecureRandom random = randoms.poll();
@@ -103,7 +96,6 @@ public abstract class SessionIdGeneratorBase
         random.nextBytes(bytes);
         randoms.add(random);
     }
-
 
     private SecureRandom createSecureRandom() {
 
@@ -122,12 +114,9 @@ public abstract class SessionIdGeneratorBase
         if (result == null) {
             // No secureRandomClass or creation failed. Use SecureRandom.
             try {
-                if (secureRandomProvider != null &&
-                        secureRandomProvider.length() > 0) {
-                    result = SecureRandom.getInstance(secureRandomAlgorithm,
-                            secureRandomProvider);
-                } else if (secureRandomAlgorithm != null &&
-                        secureRandomAlgorithm.length() > 0) {
+                if (secureRandomProvider != null && secureRandomProvider.length() > 0) {
+                    result = SecureRandom.getInstance(secureRandomAlgorithm, secureRandomProvider);
+                } else if (secureRandomAlgorithm != null && secureRandomAlgorithm.length() > 0) {
                     result = SecureRandom.getInstance(secureRandomAlgorithm);
                 }
             } catch (NoSuchAlgorithmException e) {
@@ -151,6 +140,5 @@ public abstract class SessionIdGeneratorBase
         result.nextInt();
         return result;
     }
-
 
 }

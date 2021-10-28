@@ -55,11 +55,11 @@ public class DawdlerHttpSession implements HttpSession {
     private int maxInactiveInterval = 1800;
     private ConcurrentHashMap<String, Object> attributes = new ConcurrentHashMap<>();
     private volatile boolean isValid = false;
-    private boolean expiredEvent;//是否是过期事件，还有一种情况是主动销毁,调用 invalidate，或直接触发通知(如删除sessionkey 在redis中)
-    private String sessionSign;//区分不同客户端的标识
+    private boolean expiredEvent;// 是否是过期事件，还有一种情况是主动销毁,调用 invalidate，或直接触发通知(如删除sessionkey 在redis中)
+    private String sessionSign;// 区分不同客户端的标识
 
-
-    public DawdlerHttpSession(String sessionKey, String sessionSign, SessionOperator sessionOperator, MessageOperator messageOperator, ServletContext servletContext, boolean newSession) {
+    public DawdlerHttpSession(String sessionKey, String sessionSign, SessionOperator sessionOperator,
+            MessageOperator messageOperator, ServletContext servletContext, boolean newSession) {
         this.servletContext = servletContext;
         this.sessionOperator = sessionOperator;
         this.messageOperator = messageOperator;
@@ -238,6 +238,7 @@ public class DawdlerHttpSession implements HttpSession {
         this.isValid = true;
         clear();
     }
+
     @Override
     public boolean isNew() {
         return isNew;

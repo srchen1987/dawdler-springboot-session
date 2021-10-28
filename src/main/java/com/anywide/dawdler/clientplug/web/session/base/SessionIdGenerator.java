@@ -26,14 +26,14 @@ package com.anywide.dawdler.clientplug.web.session.base;
  */
 public interface SessionIdGenerator {
     /**
-     * @return the node identifier associated with this node which will be
-     * included in the generated session ID.
+     * @return the node identifier associated with this node which will be included
+     *         in the generated session ID.
      */
     String getJvmRoute();
 
     /**
-     * Specify the node identifier associated with this node which will be
-     * included in the generated session ID.
+     * Specify the node identifier associated with this node which will be included
+     * in the generated session ID.
      *
      * @param jvmRoute The node identifier
      */

@@ -31,35 +31,33 @@ import java.util.TimeZone;
  * @author jackson.song
  * @version V1.0
  * @Title CookieManager.java
- * @Description cookie操作  直接copy tomcat中的代码
+ * @Description cookie操作 直接copy tomcat中的代码
  * @date 2016年6月16日
  * @email suxuan696@gmail.com
  */
 public class CookieManager {
-    private static final String OLD_COOKIE_PATTERN =
-            "EEE, dd-MMM-yyyy HH:mm:ss z";
-    private static final ThreadLocal<DateFormat> OLD_COOKIE_FORMAT =
-            ThreadLocal.withInitial(() -> {
-                DateFormat df =
-                        new SimpleDateFormat(OLD_COOKIE_PATTERN, Locale.US);
-                df.setTimeZone(TimeZone.getTimeZone("GMT"));
-                return df;
-            });
+    private static final String OLD_COOKIE_PATTERN = "EEE, dd-MMM-yyyy HH:mm:ss z";
+    private static final ThreadLocal<DateFormat> OLD_COOKIE_FORMAT = ThreadLocal.withInitial(() -> {
+        DateFormat df = new SimpleDateFormat(OLD_COOKIE_PATTERN, Locale.US);
+        df.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return df;
+    });
     private static final String ancientDate;
 
     static {
         ancientDate = OLD_COOKIE_FORMAT.get().format(new Date(10000));
     }
 
-    public static void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName, String value, String domain, String path, int maxAge, String comment, int version, boolean isSecure, boolean isHttpOnly) {
-		/*Cookie cookie = new Cookie(cookiename, value);
-		if(comment!=null)cookie.setComment(comment);
-		if(domain!=null)cookie.setDomain(domain);
-		cookie.setMaxAge(maxage);
-		if(path!=null)cookie.setPath(path);
-		if(version>0)cookie.setVersion(version);
-		if(secure)cookie.setSecure(secure);
-		response.addCookie(cookie);*/
+    public static void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName,
+            String value, String domain, String path, int maxAge, String comment, int version, boolean isSecure,
+            boolean isHttpOnly) {
+        /*
+         * Cookie cookie = new Cookie(cookiename, value);
+         * if(comment!=null)cookie.setComment(comment);
+         * if(domain!=null)cookie.setDomain(domain); cookie.setMaxAge(maxage);
+         * if(path!=null)cookie.setPath(path); if(version>0)cookie.setVersion(version);
+         * if(secure)cookie.setSecure(secure); response.addCookie(cookie);
+         */
         StringBuffer sb = new StringBuffer(64);
         appendCookieValue(sb, version, cookieName, value, path, domain, comment, maxAge, isSecure, isHttpOnly);
         response.addHeader("Set-Cookie", sb.toString());
@@ -74,31 +72,18 @@ public class CookieManager {
     // Discard - implied by maxAge <0
     // Port
 
-
     // -------------------- utils --------------------
-
 
     // -------------------- Cookie parsing tools
 
-    private static void appendCookieValue(StringBuffer headerBuf,
-                                          int version,
-                                          String name,
-                                          String value,
-                                          String path,
-                                          String domain,
-                                          String comment,
-                                          int maxAge,
-                                          boolean isSecure,
-                                          boolean isHttpOnly) {
+    private static void appendCookieValue(StringBuffer headerBuf, int version, String name, String value, String path,
+            String domain, String comment, int maxAge, boolean isSecure, boolean isHttpOnly) {
         StringBuffer buf = new StringBuffer();
         buf.append(name);
         buf.append("=");
         int newVersion = version;
-        if (newVersion == 0 &&
-                (!CookieSupport.ALLOW_HTTP_SEPARATORS_IN_V0 &&
-                        CookieSupport.isHttpToken(value) ||
-                        CookieSupport.ALLOW_HTTP_SEPARATORS_IN_V0 &&
-                                CookieSupport.isV0Token(value))) {
+        if (newVersion == 0 && (!CookieSupport.ALLOW_HTTP_SEPARATORS_IN_V0 && CookieSupport.isHttpToken(value)
+                || CookieSupport.ALLOW_HTTP_SEPARATORS_IN_V0 && CookieSupport.isV0Token(value))) {
             newVersion = 1;
         }
 
@@ -106,20 +91,14 @@ public class CookieManager {
             newVersion = 1;
         }
 
-        if (newVersion == 0 &&
-                (!CookieSupport.ALLOW_HTTP_SEPARATORS_IN_V0 &&
-                        CookieSupport.isHttpToken(path) ||
-                        CookieSupport.ALLOW_HTTP_SEPARATORS_IN_V0 &&
-                                CookieSupport.isV0Token(path))) {
+        if (newVersion == 0 && (!CookieSupport.ALLOW_HTTP_SEPARATORS_IN_V0 && CookieSupport.isHttpToken(path)
+                || CookieSupport.ALLOW_HTTP_SEPARATORS_IN_V0 && CookieSupport.isV0Token(path))) {
             // HTTP token in path - need to use v1
             newVersion = 1;
         }
 
-        if (newVersion == 0 &&
-                (!CookieSupport.ALLOW_HTTP_SEPARATORS_IN_V0 &&
-                        CookieSupport.isHttpToken(domain) ||
-                        CookieSupport.ALLOW_HTTP_SEPARATORS_IN_V0 &&
-                                CookieSupport.isV0Token(domain))) {
+        if (newVersion == 0 && (!CookieSupport.ALLOW_HTTP_SEPARATORS_IN_V0 && CookieSupport.isHttpToken(domain)
+                || CookieSupport.ALLOW_HTTP_SEPARATORS_IN_V0 && CookieSupport.isV0Token(domain))) {
             newVersion = 1;
         }
         maybeQuote(buf, value);
@@ -144,10 +123,8 @@ public class CookieManager {
                 if (maxAge == 0)
                     buf.append(ancientDate);
                 else
-                    OLD_COOKIE_FORMAT.get().format(
-                            new Date(JVMTimeProvider.currentTimeMillis() +
-                                    maxAge * 1000L),
-                            buf, new FieldPosition(0));
+                    OLD_COOKIE_FORMAT.get().format(new Date(JVMTimeProvider.currentTimeMillis() + maxAge * 1000L), buf,
+                            new FieldPosition(0));
             }
         }
         if (path != null) {
@@ -176,10 +153,8 @@ public class CookieManager {
             buf.append('"');
             buf.append(escapeDoubleQuotes(value, 1, value.length() - 1));
             buf.append('"');
-        } else if (CookieSupport.isHttpToken(value) &&
-                !CookieSupport.ALLOW_HTTP_SEPARATORS_IN_V0 ||
-                CookieSupport.isV0Token(value) &&
-                        CookieSupport.ALLOW_HTTP_SEPARATORS_IN_V0) {
+        } else if (CookieSupport.isHttpToken(value) && !CookieSupport.ALLOW_HTTP_SEPARATORS_IN_V0
+                || CookieSupport.isV0Token(value) && CookieSupport.ALLOW_HTTP_SEPARATORS_IN_V0) {
             buf.append('"');
             buf.append(escapeDoubleQuotes(value, 0, value.length()));
             buf.append('"');
@@ -187,7 +162,6 @@ public class CookieManager {
             buf.append(value);
         }
     }
-
 
     /**
      * Escapes any double quotes in the given string.
@@ -208,8 +182,9 @@ public class CookieManager {
             char c = s.charAt(i);
             if (c == '\\') {
                 b.append(c);
-                //ignore the character after an escape, just append it
-                if (++i >= endIndex) throw new IllegalArgumentException("Invalid escape character in cookie value.");
+                // ignore the character after an escape, just append it
+                if (++i >= endIndex)
+                    throw new IllegalArgumentException("Invalid escape character in cookie value.");
                 b.append(s.charAt(i));
             } else if (c == '"')
                 b.append('\\').append('"');

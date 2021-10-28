@@ -36,5 +36,4 @@ public interface SessionStore {
 
     void removeSession(String sessionKey) throws Exception;
 
-
 }
