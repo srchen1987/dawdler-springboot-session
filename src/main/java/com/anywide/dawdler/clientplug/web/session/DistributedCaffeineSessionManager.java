@@ -37,8 +37,7 @@ public class DistributedCaffeineSessionManager extends AbstractDistributedSessio
 
     public DistributedCaffeineSessionManager(int maxInactiveInterval, int maxSize) {
         this.maxInactiveInterval = maxInactiveInterval;
-        sessions = Caffeine.newBuilder().maximumSize(maxSize)
-                .expireAfterAccess(maxInactiveInterval, TimeUnit.SECONDS)
+        sessions = Caffeine.newBuilder().maximumSize(maxSize).expireAfterAccess(maxInactiveInterval, TimeUnit.SECONDS)
                 .build(this::createExpensiveGraph);
     }
 
@@ -56,9 +55,8 @@ public class DistributedCaffeineSessionManager extends AbstractDistributedSessio
 
     @Override
     public void close() {
-       invalidateAll();
+        invalidateAll();
     }
-
 
     @Override
     public void removeSession(String sessionKey) {
@@ -82,8 +80,8 @@ public class DistributedCaffeineSessionManager extends AbstractDistributedSessio
         }
     }
 
-	@Override
-	public void invalidateAll() {
-		sessions.invalidateAll();
-	}
+    @Override
+    public void invalidateAll() {
+        sessions.invalidateAll();
+    }
 }

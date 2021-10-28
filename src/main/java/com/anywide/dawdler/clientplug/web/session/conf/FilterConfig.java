@@ -32,8 +32,9 @@ import com.anywide.dawdler.clientplug.web.session.DawdlerSessionFilter;
  */
 //@Configuration
 public class FilterConfig {
-	@Resource
-	DawdlerSessionFilter dawdlerSessionFilter;
+    @Resource
+    DawdlerSessionFilter dawdlerSessionFilter;
+
     @Bean
     public FilterRegistrationBean filterRegistration1() {
         FilterRegistrationBean registration = new FilterRegistrationBean(dawdlerSessionFilter);

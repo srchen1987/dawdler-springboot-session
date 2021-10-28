@@ -28,8 +28,8 @@ public final class CookieSupport {
 
     // --------------------------------------------------------------- Constants
     /**
-     * If set to true, we parse cookies strictly according to the servlet,
-     * cookie and HTTP specs by default.
+     * If set to true, we parse cookies strictly according to the servlet, cookie
+     * and HTTP specs by default.
      */
     public static final boolean STRICT_SERVLET_COMPLIANCE;
 
@@ -40,87 +40,81 @@ public final class CookieSupport {
     public static final boolean ALLOW_EQUALS_IN_VALUE;
 
     /**
-     * If true, separators that are not explicitly dis-allowed by the v0 cookie
-     * spec but are disallowed by the HTTP spec will be allowed in v0 cookie
-     * names and values. These characters are: \"()/:<=>?@[\\]{} Note that the
-     * inclusion of / depends on the value of {@link #FWD_SLASH_IS_SEPARATOR}.
+     * If true, separators that are not explicitly dis-allowed by the v0 cookie spec
+     * but are disallowed by the HTTP spec will be allowed in v0 cookie names and
+     * values. These characters are: \"()/:<=>?@[\\]{} Note that the inclusion of /
+     * depends on the value of {@link #FWD_SLASH_IS_SEPARATOR}.
      */
     public static final boolean ALLOW_HTTP_SEPARATORS_IN_V0;
 
     /**
-     * If set to false, we don't use the IE6/7 Max-Age/Expires work around.
-     * Default is usually true. If STRICT_SERVLET_COMPLIANCE==true then default
-     * is false. Explicitly setting always takes priority.
+     * If set to false, we don't use the IE6/7 Max-Age/Expires work around. Default
+     * is usually true. If STRICT_SERVLET_COMPLIANCE==true then default is false.
+     * Explicitly setting always takes priority.
      */
     public static final boolean ALWAYS_ADD_EXPIRES;
 
     /**
-     * If set to true, the <code>/</code> character will be treated as a
-     * separator. Default is usually false. If STRICT_SERVLET_COMPLIANCE==true
-     * then default is true. Explicitly setting always takes priority.
+     * If set to true, the <code>/</code> character will be treated as a separator.
+     * Default is usually false. If STRICT_SERVLET_COMPLIANCE==true then default is
+     * true. Explicitly setting always takes priority.
      */
     public static final boolean FWD_SLASH_IS_SEPARATOR;
 
     /**
-     * The list of separators that apply to version 0 cookies. To quote the
-     * spec, these are comma, semi-colon and white-space. The HTTP spec
-     * definition of linear white space is [CRLF] 1*( SP | HT )
+     * The list of separators that apply to version 0 cookies. To quote the spec,
+     * these are comma, semi-colon and white-space. The HTTP spec definition of
+     * linear white space is [CRLF] 1*( SP | HT )
      */
-    private static final char[] V0_SEPARATORS = {',', ';', ' ', '\t'};
+    private static final char[] V0_SEPARATORS = { ',', ';', ' ', '\t' };
     private static final boolean[] V0_SEPARATOR_FLAGS = new boolean[128];
 
     /**
-     * The list of separators that apply to version 1 cookies. This may or may
-     * not include '/' depending on the setting of
-     * {@link #FWD_SLASH_IS_SEPARATOR}.
+     * The list of separators that apply to version 1 cookies. This may or may not
+     * include '/' depending on the setting of {@link #FWD_SLASH_IS_SEPARATOR}.
      */
     private static final char[] HTTP_SEPARATORS;
     private static final boolean[] HTTP_SEPARATOR_FLAGS = new boolean[128];
 
     static {
-        STRICT_SERVLET_COMPLIANCE = Boolean.valueOf(System.getProperty(
-                "org.apache.catalina.STRICT_SERVLET_COMPLIANCE",
-                "false")).booleanValue();
+        STRICT_SERVLET_COMPLIANCE = Boolean
+                .valueOf(System.getProperty("org.apache.catalina.STRICT_SERVLET_COMPLIANCE", "false")).booleanValue();
 
-        ALLOW_EQUALS_IN_VALUE = Boolean.valueOf(System.getProperty(
-                "org.apache.tomcat.util.http.ServerCookie.ALLOW_EQUALS_IN_VALUE",
-                "false")).booleanValue();
+        ALLOW_EQUALS_IN_VALUE = Boolean
+                .valueOf(System.getProperty("org.apache.tomcat.util.http.ServerCookie.ALLOW_EQUALS_IN_VALUE", "false"))
+                .booleanValue();
 
-        ALLOW_HTTP_SEPARATORS_IN_V0 = Boolean.valueOf(System.getProperty(
-                "org.apache.tomcat.util.http.ServerCookie.ALLOW_HTTP_SEPARATORS_IN_V0",
-                "false")).booleanValue();
+        ALLOW_HTTP_SEPARATORS_IN_V0 = Boolean.valueOf(
+                System.getProperty("org.apache.tomcat.util.http.ServerCookie.ALLOW_HTTP_SEPARATORS_IN_V0", "false"))
+                .booleanValue();
 
-        String alwaysAddExpires = System.getProperty(
-                "org.apache.tomcat.util.http.ServerCookie.ALWAYS_ADD_EXPIRES");
+        String alwaysAddExpires = System.getProperty("org.apache.tomcat.util.http.ServerCookie.ALWAYS_ADD_EXPIRES");
         if (alwaysAddExpires == null) {
             ALWAYS_ADD_EXPIRES = !STRICT_SERVLET_COMPLIANCE;
         } else {
-            ALWAYS_ADD_EXPIRES =
-                    Boolean.valueOf(alwaysAddExpires).booleanValue();
+            ALWAYS_ADD_EXPIRES = Boolean.valueOf(alwaysAddExpires).booleanValue();
         }
 
-        String fwdSlashIsSeparator = System.getProperty(
-                "org.apache.tomcat.util.http.ServerCookie.FWD_SLASH_IS_SEPARATOR");
+        String fwdSlashIsSeparator = System
+                .getProperty("org.apache.tomcat.util.http.ServerCookie.FWD_SLASH_IS_SEPARATOR");
         if (fwdSlashIsSeparator == null) {
             FWD_SLASH_IS_SEPARATOR = STRICT_SERVLET_COMPLIANCE;
         } else {
-            FWD_SLASH_IS_SEPARATOR =
-                    Boolean.valueOf(fwdSlashIsSeparator).booleanValue();
+            FWD_SLASH_IS_SEPARATOR = Boolean.valueOf(fwdSlashIsSeparator).booleanValue();
         }
-        
+
         /*
-        Excluding the '/' char by default violates the RFC, but 
-        it looks like a lot of people put '/'
-        in unquoted values: '/': ; //47 
-        '\t':9 ' ':32 '\"':34 '(':40 ')':41 ',':44 ':':58 ';':59 '<':60 
-        '=':61 '>':62 '?':63 '@':64 '[':91 '\\':92 ']':93 '{':123 '}':125
-        */
+         * Excluding the '/' char by default violates the RFC, but it looks like a lot
+         * of people put '/' in unquoted values: '/': ; //47 '\t':9 ' ':32 '\"':34
+         * '(':40 ')':41 ',':44 ':':58 ';':59 '<':60 '=':61 '>':62 '?':63 '@':64 '[':91
+         * '\\':92 ']':93 '{':123 '}':125
+         */
         if (CookieSupport.FWD_SLASH_IS_SEPARATOR) {
-            HTTP_SEPARATORS = new char[]{'\t', ' ', '\"', '(', ')', ',', '/',
-                    ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '{', '}'};
+            HTTP_SEPARATORS = new char[] { '\t', ' ', '\"', '(', ')', ',', '/', ':', ';', '<', '=', '>', '?', '@', '[',
+                    '\\', ']', '{', '}' };
         } else {
-            HTTP_SEPARATORS = new char[]{'\t', ' ', '\"', '(', ')', ',',
-                    ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '{', '}'};
+            HTTP_SEPARATORS = new char[] { '\t', ' ', '\"', '(', ')', ',', ':', ';', '<', '=', '>', '?', '@', '[', '\\',
+                    ']', '{', '}' };
         }
         for (int i = 0; i < 128; i++) {
             V0_SEPARATOR_FLAGS[i] = false;
@@ -143,14 +137,12 @@ public final class CookieSupport {
     }
 
     /**
-     * Returns true if the byte is a separator as defined by V0 of the cookie
-     * spec.
+     * Returns true if the byte is a separator as defined by V0 of the cookie spec.
      */
     public static final boolean isV0Separator(final char c) {
         if (c < 0x20 || c >= 0x7f) {
             if (c != 0x09) {
-                throw new IllegalArgumentException(
-                        "Control character in cookie value or attribute.");
+                throw new IllegalArgumentException("Control character in cookie value or attribute.");
             }
         }
 
@@ -158,7 +150,8 @@ public final class CookieSupport {
     }
 
     public static boolean isV0Token(String value) {
-        if (value == null) return false;
+        if (value == null)
+            return false;
 
         int i = 0;
         int len = value.length();
@@ -178,17 +171,15 @@ public final class CookieSupport {
     }
 
     /**
-     * Returns true if the byte is a separator as defined by V1 of the cookie
-     * spec, RFC2109.
+     * Returns true if the byte is a separator as defined by V1 of the cookie spec,
+     * RFC2109.
      *
-     * @throws IllegalArgumentException if a control character was supplied as
-     *                                  input
+     * @throws IllegalArgumentException if a control character was supplied as input
      */
     public static final boolean isHttpSeparator(final char c) {
         if (c < 0x20 || c >= 0x7f) {
             if (c != 0x09) {
-                throw new IllegalArgumentException(
-                        "Control character in cookie value or attribute.");
+                throw new IllegalArgumentException("Control character in cookie value or attribute.");
             }
         }
 
@@ -196,7 +187,8 @@ public final class CookieSupport {
     }
 
     public static boolean isHttpToken(String value) {
-        if (value == null) return false;
+        if (value == null)
+            return false;
 
         int i = 0;
         int len = value.length();
@@ -216,7 +208,8 @@ public final class CookieSupport {
     }
 
     public static boolean alreadyQuoted(String value) {
-        if (value == null || value.length() < 2) return false;
+        if (value == null || value.length() < 2)
+            return false;
         return (value.charAt(0) == '\"' && value.charAt(value.length() - 1) == '\"');
     }
 }

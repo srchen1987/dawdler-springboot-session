@@ -47,7 +47,9 @@ public class SessionOperator {
     private final MessageOperator messageOperator;
     private final SessionIdGeneratorBase sessionIdGenerator;
 
-    public SessionOperator(AbstractDistributedSessionManager abstractDistributedSessionManager, SessionIdGeneratorBase sessionIdGenerator, SessionStore sessionStore, MessageOperator messageOperator, Serializer serializer, ServletContext servletContext) {
+    public SessionOperator(AbstractDistributedSessionManager abstractDistributedSessionManager,
+            SessionIdGeneratorBase sessionIdGenerator, SessionStore sessionStore, MessageOperator messageOperator,
+            Serializer serializer, ServletContext servletContext) {
         this.abstractDistributedSessionManager = abstractDistributedSessionManager;
         this.sessionIdGenerator = sessionIdGenerator;
         this.sessionStore = sessionStore;
@@ -102,12 +104,12 @@ public class SessionOperator {
 
     public DawdlerHttpSession createLocalSession(String sessionKey, int maxInactiveInterval, boolean newSession) {
         String sessionSign = sessionIdGenerator.generateSessionId();
-        DawdlerHttpSession session = new DawdlerHttpSession(sessionKey, sessionSign, this, messageOperator, servletContext, newSession);
+        DawdlerHttpSession session = new DawdlerHttpSession(sessionKey, sessionSign, this, messageOperator,
+                servletContext, newSession);
         session.setMaxInactiveInterval(maxInactiveInterval);
         abstractDistributedSessionManager.addSession(sessionKey, session);
         return session;
     }
-
 
     public void getAttribute(String sessionKey, String attribute) {
         try {

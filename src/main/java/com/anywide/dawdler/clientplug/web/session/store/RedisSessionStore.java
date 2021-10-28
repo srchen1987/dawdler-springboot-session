@@ -73,7 +73,7 @@ public class RedisSessionStore implements SessionStore {
      * @throws Exception
      * @Title saveSession
      * @Description 将session序列化到redis中，由于redis不支持put与expire一起执行，lua写又没办法传入hmap结构
-     * 所以采用了pipeline
+     *              所以采用了pipeline
      * @author jackson.song
      * @date 2016年6月16日
      */
@@ -90,7 +90,7 @@ public class RedisSessionStore implements SessionStore {
     @Override
     public byte[] getAttribute(String sessionKey, String attribute) throws Exception {
         return execute(jedisPool, getAttributeJedisExecutor,
-                new byte[][]{(SESSIONKEY_PREFIX+sessionKey).getBytes(), attribute.getBytes()});
+                new byte[][] { (SESSIONKEY_PREFIX + sessionKey).getBytes(), attribute.getBytes() });
     }
 
     @Override

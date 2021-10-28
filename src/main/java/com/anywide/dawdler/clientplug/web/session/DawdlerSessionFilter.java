@@ -117,7 +117,8 @@ public class DawdlerSessionFilter implements Filter {
             if (maxInactiveIntervalString != null) {
                 try {
                     int temp = Integer.parseInt(maxInactiveIntervalString);
-                    if (temp > 0) maxInactiveInterval = temp;
+                    if (temp > 0)
+                        maxInactiveInterval = temp;
                 } catch (Exception e) {
                 }
             }
@@ -126,7 +127,8 @@ public class DawdlerSessionFilter implements Filter {
             if (maxSizeString != null) {
                 try {
                     int temp = Integer.parseInt(maxSizeString);
-                    if (temp > 0) maxSize = temp;
+                    if (temp > 0)
+                        maxSize = temp;
                 } catch (Exception e) {
                 }
             }
@@ -135,7 +137,8 @@ public class DawdlerSessionFilter implements Filter {
             if (synchFlushIntervalString != null) {
                 try {
                     int temp = Integer.parseInt(synchFlushIntervalString);
-                    if (temp > 0) synFlushInterval = temp;
+                    if (temp > 0)
+                        synFlushInterval = temp;
                 } catch (Exception e) {
                 }
             }
@@ -164,20 +167,23 @@ public class DawdlerSessionFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         if (jedisPool == null)
-           jedisPool = DistributedSessionRedisUtil.getJedisPool();
+            jedisPool = DistributedSessionRedisUtil.getJedisPool();
         servletContext = filterConfig.getServletContext();
         abstractDistributedSessionManager = new DistributedCaffeineSessionManager(maxInactiveInterval, maxSize);
-        if(servletContext != null) { //support webflux reactor spring-cloud-gatewy
-        	  Object listener = servletContext.getAttribute(AbstractDistributedSessionManager.DISTRIBUTED_SESSION_HTTPSESSION_LISTENER);
-              if (listener instanceof HttpSessionListener) {
-                  abstractDistributedSessionManager.setHttpSessionListener((HttpSessionListener) listener);
-              }
+        if (servletContext != null) { // support webflux reactor spring-cloud-gatewy
+            Object listener = servletContext
+                    .getAttribute(AbstractDistributedSessionManager.DISTRIBUTED_SESSION_HTTPSESSION_LISTENER);
+            if (listener instanceof HttpSessionListener) {
+                abstractDistributedSessionManager.setHttpSessionListener((HttpSessionListener) listener);
+            }
         }
-      
-        serializer = SerializeDecider.decide((byte) 2);//默认为kroy 需要其他的可以自行扩展
+
+        serializer = SerializeDecider.decide((byte) 2);// 默认为kroy 需要其他的可以自行扩展
         sessionStore = new RedisSessionStore(jedisPool, serializer);
-        messageOperator = new RedisMessageOperator(serializer, sessionStore, abstractDistributedSessionManager, jedisPool);
-        sessionOperator = new SessionOperator(abstractDistributedSessionManager, sessionIdGenerator, sessionStore, messageOperator, serializer, servletContext);
+        messageOperator = new RedisMessageOperator(serializer, sessionStore, abstractDistributedSessionManager,
+                jedisPool);
+        sessionOperator = new SessionOperator(abstractDistributedSessionManager, sessionIdGenerator, sessionStore,
+                messageOperator, serializer, servletContext);
         messageOperator.listenExpireAndDelAndChange();
     }
 
@@ -191,6 +197,7 @@ public class DawdlerSessionFilter implements Filter {
             chain.doFilter(httpRequest, httpReponse);
         } finally {
             DawdlerHttpSession session = (DawdlerHttpSession) httpRequest.getSession(false);
+            System.out.println("finally :" + session);
             if (session != null) {
                 try {
                     sessionStore.saveSession(session);
@@ -202,6 +209,7 @@ public class DawdlerSessionFilter implements Filter {
                     Cookie cookie = new Cookie(cookieName, null);
                     cookie.setMaxAge(0);
                     cookie.setPath("/");
+                    System.out.println("cookie :" + cookie);
                     httpReponse.addCookie(cookie);
                 }
             }
@@ -230,7 +238,7 @@ public class DawdlerSessionFilter implements Filter {
             abstractDistributedSessionManager.close();
         }
         if (jedisPool != null) {
-        	jedisPool.close();
+            jedisPool.close();
         }
 
     }
@@ -262,7 +270,6 @@ public class DawdlerSessionFilter implements Filter {
             }
             if (session != null && session.isValid()) {
                 abstractDistributedSessionManager.removeSession(session.getId());
-                session = null;
             }
             if (session == null && create) {
                 String sessionKey = sessionIdGenerator.generateSessionId();
@@ -277,12 +284,10 @@ public class DawdlerSessionFilter implements Filter {
             return session;
         }
 
-
         @Override
         public HttpSession getSession() {
             return this.getSession(true);
         }
-
 
         private void setCookie(String name, String value) {
             Cookie cookie = new Cookie(name, value);
