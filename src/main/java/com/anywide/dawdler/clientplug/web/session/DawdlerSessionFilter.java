@@ -197,7 +197,6 @@ public class DawdlerSessionFilter implements Filter {
             chain.doFilter(httpRequest, httpReponse);
         } finally {
             DawdlerHttpSession session = (DawdlerHttpSession) httpRequest.getSession(false);
-            System.out.println("finally :" + session);
             if (session != null) {
                 try {
                     sessionStore.saveSession(session);
@@ -209,7 +208,6 @@ public class DawdlerSessionFilter implements Filter {
                     Cookie cookie = new Cookie(cookieName, null);
                     cookie.setMaxAge(0);
                     cookie.setPath("/");
-                    System.out.println("cookie :" + cookie);
                     httpReponse.addCookie(cookie);
                 }
             }
