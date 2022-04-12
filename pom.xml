@@ -49,12 +49,12 @@
 		<dependency>
 			<groupId>dawdler</groupId>
 			<artifactId>dawdler-serialization</artifactId>
-			<version>0.0.1-RELEASES</version>
+			<version>0.0.2-RELEASES</version>
 		</dependency>
 		<dependency>
 			<groupId>dawdler</groupId>
 			<artifactId>dawdler-util</artifactId>
-			<version>0.0.1-RELEASES</version>
+			<version>0.0.2-RELEASES</version>
 		</dependency>
 		
 		</dependencies>

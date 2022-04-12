@@ -68,37 +68,41 @@ public final class DistributedSessionRedisUtil {
                 try {
                     inStream = new FileInputStream(filePath);
                 } catch (FileNotFoundException e) {
+                	logger.error("", e);
                 }
             }
-            ps.load(inStream);
-            String addr = ps.get("addr").toString();
-            String auth = ps.get("auth").toString();
-            int port = Integer.parseInt(ps.get("port").toString());
-            int database = getIfNullReturnDefaultValueInt("database", 0);
-            int max_idle = getIfNullReturnDefaultValueInt("max_idle", JedisPoolConfig.DEFAULT_MAX_IDLE);
-            long max_wait = getIfNullReturnDefaultValueLong("max_wait", JedisPoolConfig.DEFAULT_MAX_WAIT_MILLIS);
-            int max_active = getIfNullReturnDefaultValueInt("max_active", JedisPoolConfig.DEFAULT_MAX_TOTAL);
-            int timeout = getIfNullReturnDefaultValueInt("timeout", Protocol.DEFAULT_TIMEOUT);
-            Object test_on_borrowObj = ps.get("test_on_borrow");
-            boolean test_on_borrow = JedisPoolConfig.DEFAULT_TEST_ON_BORROW;
-            if (test_on_borrowObj != null) {
-                test_on_borrow = Boolean.parseBoolean(test_on_borrowObj.toString());
-            }
+            if(inStream != null) {
+                 ps.load(inStream);
+                 String addr = ps.get("addr").toString();
+                 String auth = ps.get("auth").toString();
+                 int port = Integer.parseInt(ps.get("port").toString());
+                 int database = getIfNullReturnDefaultValueInt("database", 0);
+                 int max_idle = getIfNullReturnDefaultValueInt("max_idle", JedisPoolConfig.DEFAULT_MAX_IDLE);
+                 long max_wait = getIfNullReturnDefaultValueLong("max_wait", JedisPoolConfig.DEFAULT_MAX_WAIT_MILLIS);
+                 int max_active = getIfNullReturnDefaultValueInt("max_active", JedisPoolConfig.DEFAULT_MAX_TOTAL);
+                 int timeout = getIfNullReturnDefaultValueInt("timeout", Protocol.DEFAULT_TIMEOUT);
+                 Object test_on_borrowObj = ps.get("test_on_borrow");
+                 boolean test_on_borrow = JedisPoolConfig.DEFAULT_TEST_ON_BORROW;
+                 if (test_on_borrowObj != null) {
+                     test_on_borrow = Boolean.parseBoolean(test_on_borrowObj.toString());
+                 }
 
-            JedisPoolConfig poolConfig = new JedisPoolConfig();
-            poolConfig.setMaxTotal(max_active);
-            poolConfig.setMaxIdle(max_idle);
-            poolConfig.setMaxWaitMillis(max_wait);
-            poolConfig.setTestOnBorrow(test_on_borrow);
-            String masterName = (String) ps.get("masterName");
-            String sentinels = (String) ps.get("sentinels");
-            if (masterName != null && sentinels != null) {
-                String[] sentinelsArray = sentinels.split(",");
-                Set<String> sentinelsSet = Arrays.stream(sentinelsArray).collect(Collectors.toSet());
-                jedisPool = new JedisSentinelPool(masterName, sentinelsSet, poolConfig, timeout, auth, database);
-            } else {
-                jedisPool = new JedisPool(poolConfig, addr, port, timeout, auth, database);
+                 JedisPoolConfig poolConfig = new JedisPoolConfig();
+                 poolConfig.setMaxTotal(max_active);
+                 poolConfig.setMaxIdle(max_idle);
+                 poolConfig.setMaxWaitMillis(max_wait);
+                 poolConfig.setTestOnBorrow(test_on_borrow);
+                 String masterName = (String) ps.get("masterName");
+                 String sentinels = (String) ps.get("sentinels");
+                 if (masterName != null && sentinels != null) {
+                     String[] sentinelsArray = sentinels.split(",");
+                     Set<String> sentinelsSet = Arrays.stream(sentinelsArray).collect(Collectors.toSet());
+                     jedisPool = new JedisSentinelPool(masterName, sentinelsSet, poolConfig, timeout, auth, database);
+                 } else {
+                     jedisPool = new JedisPool(poolConfig, addr, port, timeout, auth, database);
+                 }
             }
+           
         } catch (Exception e) {
             logger.error("", e);
         } finally {
