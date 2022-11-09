@@ -30,7 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.anywide.dawdler.clientplug.web.session.DawdlerSessionFilter;
-import com.anywide.dawdler.util.DawdlerTool;
+import com.anywide.dawdler.clientplug.web.session.util.DawdlerTool;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;

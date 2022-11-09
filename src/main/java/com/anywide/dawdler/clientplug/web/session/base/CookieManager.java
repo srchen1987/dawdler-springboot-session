@@ -26,8 +26,6 @@ import java.util.TimeZone;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.anywide.dawdler.util.JVMTimeProvider;
-
 /**
  * @author jackson.song
  * @version V1.0
@@ -124,7 +122,7 @@ public class CookieManager {
                 if (maxAge == 0)
                     buf.append(ancientDate);
                 else
-                    OLD_COOKIE_FORMAT.get().format(new Date(JVMTimeProvider.currentTimeMillis() + maxAge * 1000L), buf,
+                    OLD_COOKIE_FORMAT.get().format(new Date(System.currentTimeMillis() + maxAge * 1000L), buf,
                             new FieldPosition(0));
             }
         }
