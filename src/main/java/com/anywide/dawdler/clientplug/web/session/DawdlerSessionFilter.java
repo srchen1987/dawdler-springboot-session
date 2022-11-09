@@ -80,7 +80,7 @@ public class DawdlerSessionFilter implements Filter {
 //    private static int synFlushInterval = 0;
 
     static {
-        String filePath = DawdlerTool.getcurrentPath() + "identityConfig.properties";
+        String filePath = DawdlerTool.getCurrentPath() + "identityConfig.properties";
         File file = new File(filePath);
         InputStream inStream = null;
         if (!file.isFile()) {
@@ -299,7 +299,7 @@ public class DawdlerSessionFilter implements Filter {
                 cookie.setDomain(domain);
             }
             cookie.setHttpOnly(true);
-            cookie.setSecure(secure);
+            cookie.setSecure("https".equals(request.getScheme()));
             response.addCookie(cookie);
         }
     }
