@@ -24,7 +24,7 @@ cookieName=_dawdler_key #cookie中存放名称
 domain= #域,默认为空 为客户端请求过来的域名
 path=/ #cookie的path
 secure=false #是否为https
-expireTime=1800 #过期时间 单位为秒数 默认30分钟
+maxInactiveInterval=1800 #过期时间 单位为秒数 默认30分钟
 maxSize=65525 #jvm堆中最大的个数
 useToken=true #是否允许使用token  如果为是 支持uri后面传入token参数 或 http head头中传入token参数
 ```

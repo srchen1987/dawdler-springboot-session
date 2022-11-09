@@ -58,7 +58,7 @@ public final class DistributedSessionRedisUtil {
     static {
         String env = System.getProperty("spring.profiles.active");
         String fileName = "session-redis" + (env != null ? "-" + env : "") + ".properties";
-        String filePath = DawdlerTool.getcurrentPath() + fileName;
+        String filePath = DawdlerTool.getCurrentPath() + fileName;
         File file = new File(filePath);
         InputStream inStream = null;
         try {
