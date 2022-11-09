@@ -16,16 +16,15 @@
  */
 package com.anywide.dawdler.clientplug.web.session.base;
 
-import com.anywide.dawdler.util.JVMTimeProvider;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.text.DateFormat;
 import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author jackson.song
@@ -123,7 +122,7 @@ public class CookieManager {
                 if (maxAge == 0)
                     buf.append(ancientDate);
                 else
-                    OLD_COOKIE_FORMAT.get().format(new Date(JVMTimeProvider.currentTimeMillis() + maxAge * 1000L), buf,
+                    OLD_COOKIE_FORMAT.get().format(new Date(System.currentTimeMillis() + maxAge * 1000L), buf,
                             new FieldPosition(0));
             }
         }

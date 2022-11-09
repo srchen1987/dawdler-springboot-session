@@ -16,19 +16,19 @@
  */
 package com.anywide.dawdler.clientplug.web.session.http;
 
-import com.anywide.dawdler.clientplug.web.session.SessionOperator;
-import com.anywide.dawdler.clientplug.web.session.message.MessageOperator;
-import com.anywide.dawdler.util.JVMTimeProvider;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionContext;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionContext;
+
+import com.anywide.dawdler.clientplug.web.session.SessionOperator;
+import com.anywide.dawdler.clientplug.web.session.message.MessageOperator;
 
 /**
  * @author jackson.song
@@ -66,7 +66,7 @@ public class DawdlerHttpSession implements HttpSession {
         this.sessionKey = sessionKey;
         this.sessionSign = sessionSign;
         if (newSession) {
-            creationTime = JVMTimeProvider.currentTimeMillis();
+            creationTime = System.currentTimeMillis();
             lastAccessedTime = creationTime;
             attributesAddNew.put(CREATION_TIME_KEY, creationTime);
             attributesAddNew.put(LAST_ACCESSED_TIME_KEY, lastAccessedTime);
@@ -252,7 +252,7 @@ public class DawdlerHttpSession implements HttpSession {
         attributesAddNew.clear();
         attributesRemoveNewKeys.clear();
         clearFlushImmediately();
-        lastAccessedTime = JVMTimeProvider.currentTimeMillis();
+        lastAccessedTime = System.currentTimeMillis();
     }
 
     public void clear() {
