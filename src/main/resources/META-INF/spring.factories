@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.anywide.dawdler.clientplug.web.session.conf.FilterConfig

@@ -6,11 +6,11 @@ import java.net.URLDecoder;
 /**
  * @author jackson.song
  * @Title DawdlerTool.java
- * @Description  DawdlerTool
+ * @Description DawdlerTool
  * @date 2022年11月9日
  */
 public class DawdlerTool {
-	
+
 	public static String getCurrentPath() {
 		try {
 			return URLDecoder.decode(Thread.currentThread().getContextClassLoader().getResource("").getPath(), "utf-8");
