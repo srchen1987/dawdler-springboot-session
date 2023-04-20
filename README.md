@@ -9,7 +9,7 @@ dawdler-springboot-session基于 [dawdler-client-plug-session](https://github.co
 
   ```java
   @EnableDiscoveryClient
-  @SpringBootApplication(scanBasePackages = {"com.dawdler.gateway.boostrap","com.anywide.dawdler.clientplug.web.session"})
+  @SpringBootApplication
   public class GatewayServiceApplication {
   public static void main(String[] args) {
          SpringApplication.run(GatewayServiceApplication.class, args);
@@ -50,4 +50,5 @@ timeout=10000 #超时时间(单位毫秒)
 test_on_borrow=false #获取连接时是否验证连接有效
 database=0 #使用指定数据槽
 ```
+
 以上配置文件优先读取项目中的配置文件，读取不到会读取jar包中的.
