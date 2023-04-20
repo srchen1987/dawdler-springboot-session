@@ -16,10 +16,11 @@
  */
 package com.anywide.dawdler.clientplug.web.session.conf;
 
-import javax.annotation.Resource;
+import javax.servlet.Filter;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import com.anywide.dawdler.clientplug.web.session.DawdlerSessionFilter;
 
@@ -31,15 +32,14 @@ import com.anywide.dawdler.clientplug.web.session.DawdlerSessionFilter;
  * @date 2019年11月21日
  * @email suxuan696@gmail.com
  */
-//@Configuration
+@Configuration
 public class FilterConfig {
-    @Resource
-    DawdlerSessionFilter dawdlerSessionFilter;
+	private DawdlerSessionFilter dawdlerSessionFilter = new DawdlerSessionFilter();
 
-    @Bean
-    public FilterRegistrationBean filterRegistration1() {
-        FilterRegistrationBean registration = new FilterRegistrationBean(dawdlerSessionFilter);
-        registration.addUrlPatterns("/*");
-        return registration;
-    }
+	@Bean
+	public FilterRegistrationBean filterRegistration() {
+		FilterRegistrationBean registration = new FilterRegistrationBean(dawdlerSessionFilter);
+		registration.addUrlPatterns("/*");
+		return registration;
+	}
 }

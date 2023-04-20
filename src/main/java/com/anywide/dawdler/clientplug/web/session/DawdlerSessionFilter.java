@@ -66,7 +66,6 @@ import redis.clients.util.Pool;
  * @date 2016年6月16日
  * @email suxuan696@gmail.com
  */
-@Component
 @Order(0)
 @WebFilter(filterName = "DawdlerSessionFilter", urlPatterns = "/*")
 public class DawdlerSessionFilter implements Filter {
