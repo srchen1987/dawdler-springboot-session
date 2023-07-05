@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.Set;
@@ -90,7 +91,7 @@ public final class DistributedSessionRedisUtil {
 				JedisPoolConfig poolConfig = new JedisPoolConfig();
 				poolConfig.setMaxTotal(max_active);
 				poolConfig.setMaxIdle(max_idle);
-				poolConfig.setMaxWaitMillis(max_wait);
+				poolConfig.setMaxWait(Duration.ofMillis(max_wait));
 				poolConfig.setTestOnBorrow(test_on_borrow);
 				String masterName = (String) ps.get("masterName");
 				String sentinels = (String) ps.get("sentinels");
