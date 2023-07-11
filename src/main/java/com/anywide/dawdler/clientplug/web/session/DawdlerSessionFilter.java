@@ -44,6 +44,7 @@ import org.springframework.core.annotation.Order;
 
 import com.anywide.dawdler.clientplug.web.session.base.SessionIdGeneratorBase;
 import com.anywide.dawdler.clientplug.web.session.base.StandardSessionIdGenerator;
+import com.anywide.dawdler.clientplug.web.session.conf.JedisConfig;
 import com.anywide.dawdler.clientplug.web.session.http.DawdlerHttpSession;
 import com.anywide.dawdler.clientplug.web.session.message.MessageOperator;
 import com.anywide.dawdler.clientplug.web.session.message.RedisMessageOperator;
@@ -75,8 +76,12 @@ public class DawdlerSessionFilter implements Filter {
 	public static boolean secure;
 	private static int maxInactiveInterval = 1800;
 	private static int maxSize = 65525;
-//    private static int synFlushInterval = 0;
-
+	private JedisConfig jedisConfig;
+//   private static int synFlushInterval = 0;
+	
+	public DawdlerSessionFilter(JedisConfig jedisConfig) {
+		this.jedisConfig = jedisConfig;
+	}
 	static {
 		String filePath = DawdlerTool.getCurrentPath() + "identityConfig.properties";
 		File file = new File(filePath);
@@ -165,7 +170,7 @@ public class DawdlerSessionFilter implements Filter {
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		if (jedisPool == null)
-			jedisPool = DistributedSessionRedisUtil.getJedisPool();
+			jedisPool = DistributedSessionRedisUtil.getJedisPool(jedisConfig);
 		servletContext = filterConfig.getServletContext();
 		abstractDistributedSessionManager = new DistributedCaffeineSessionManager(maxInactiveInterval, maxSize);
 		if (servletContext != null) { // support webflux reactor spring-cloud-gatewy

@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.anywide.dawdler.clientplug.web.session.DawdlerSessionFilter;
+import com.anywide.dawdler.clientplug.web.session.conf.JedisConfig;
 import com.anywide.dawdler.clientplug.web.session.util.DawdlerTool;
 
 import redis.clients.jedis.Jedis;
@@ -54,7 +55,7 @@ public final class DistributedSessionRedisUtil {
 	 * 初始化Redis连接池
 	 */
 	private static final Properties ps = new Properties();
-	private static Pool<Jedis> jedisPool = null;
+	private static volatile Pool<Jedis> jedisPool = null;
 
 	static {
 		String env = System.getProperty("spring.profiles.active");
@@ -141,8 +142,36 @@ public final class DistributedSessionRedisUtil {
 		return defaultValue;
 	}
 
-	public static Pool<Jedis> getJedisPool() {
+	public static Pool<Jedis> getJedisPool(JedisConfig jedisConfig) {
+		if (jedisPool == null) {
+			synchronized (DistributedSessionRedisUtil.class) {
+				if (jedisPool == null) {
+					init(jedisConfig);
+				}
+			}
+		}
 		return jedisPool;
+	}
+
+	private static void init(JedisConfig jedisConfig) {
+		JedisPoolConfig poolConfig = new JedisPoolConfig();
+		poolConfig.setMaxTotal(jedisConfig.getMaxActive());
+		poolConfig.setMaxIdle(jedisConfig.getMaxIdle());
+		poolConfig.setMaxWait(Duration.ofMillis(jedisConfig.getMaxWait()));
+		poolConfig.setTestOnBorrow(jedisConfig.getTest_on_borrow());
+		String masterName = jedisConfig.getMasterName();
+		String sentinels = jedisConfig.getSentinels();
+		String userName = jedisConfig.getUserName();
+		String auth = jedisConfig.getAuth();
+		if (masterName != null && sentinels != null) {
+			String[] sentinelsArray = sentinels.split(",");
+			Set<String> sentinelsSet = Arrays.stream(sentinelsArray).collect(Collectors.toSet());
+			jedisPool = new JedisSentinelPool(masterName, sentinelsSet, poolConfig, jedisConfig.getTimeout(), userName,
+					auth, jedisConfig.getDatabase());
+		} else {
+			jedisPool = new JedisPool(poolConfig, jedisConfig.getAddr(), jedisConfig.getPort(),
+					jedisConfig.getTimeout(), userName, auth, jedisConfig.getDatabase());
+		}
 	}
 
 }
