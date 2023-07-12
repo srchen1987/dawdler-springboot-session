@@ -21,9 +21,6 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.anywide.dawdler.clientplug.web.session.conf.JedisConfig;
 
 import redis.clients.jedis.Jedis;
@@ -65,7 +62,7 @@ public final class DistributedSessionRedisUtil {
 		poolConfig.setMaxTotal(jedisConfig.getMaxActive());
 		poolConfig.setMaxIdle(jedisConfig.getMaxIdle());
 		poolConfig.setMaxWait(Duration.ofMillis(jedisConfig.getMaxWait()));
-		poolConfig.setTestOnBorrow(jedisConfig.getTest_on_borrow());
+		poolConfig.setTestOnBorrow(jedisConfig.getTestOnBorrow());
 		String masterName = jedisConfig.getMasterName();
 		String sentinels = jedisConfig.getSentinels();
 		String userName = jedisConfig.getUserName();

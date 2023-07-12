@@ -15,7 +15,7 @@ public class JedisConfig {
 			private Integer maxIdle = JedisPoolConfig.DEFAULT_MAX_IDLE;
 			private Long maxWait = JedisPoolConfig.DEFAULT_MAX_WAIT.toMillis();
 			private Integer timeout =  Protocol.DEFAULT_TIMEOUT;
-			private Boolean test_on_borrow = false;
+			private Boolean testOnBorrow = false;
 			private Integer database = 9;
 			private String masterName;
 			private String sentinels;
@@ -58,11 +58,11 @@ public class JedisConfig {
 			public void setTimeout(Integer timeout) {
 				this.timeout = timeout;
 			}
-			public Boolean getTest_on_borrow() {
-				return test_on_borrow;
+			public Boolean getTestOnBorrow() {
+				return testOnBorrow;
 			}
-			public void setTest_on_borrow(Boolean test_on_borrow) {
-				this.test_on_borrow = test_on_borrow;
+			public void setTestOnBorrow(Boolean testOnBorrow) {
+				this.testOnBorrow = testOnBorrow;
 			}
 			public Integer getDatabase() {
 				return database;
