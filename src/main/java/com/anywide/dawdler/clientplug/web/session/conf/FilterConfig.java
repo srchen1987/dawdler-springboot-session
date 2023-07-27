@@ -16,8 +16,7 @@
  */
 package com.anywide.dawdler.clientplug.web.session.conf;
 
-import javax.servlet.Filter;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,10 +33,12 @@ import com.anywide.dawdler.clientplug.web.session.DawdlerSessionFilter;
  */
 @Configuration
 public class FilterConfig {
-	private DawdlerSessionFilter dawdlerSessionFilter = new DawdlerSessionFilter();
+	@Autowired
+	private JedisConfig jedisConfig;
 
 	@Bean
 	public FilterRegistrationBean filterRegistration() {
+		DawdlerSessionFilter dawdlerSessionFilter = new DawdlerSessionFilter(jedisConfig);
 		FilterRegistrationBean registration = new FilterRegistrationBean(dawdlerSessionFilter);
 		registration.addUrlPatterns("/*");
 		return registration;

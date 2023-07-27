@@ -5,7 +5,7 @@ dawdler-springboot-session基于 [dawdler-client-plug-session](https://github.co
 
 ## 快速入门
 
-在springboot的启动类中 加入扫描com.anywide.dawdler.clientplug.web.session包 demo如下：
+在springboot的启动类中 引入pom后直接启动
 
   ```java
   @EnableDiscoveryClient
@@ -29,9 +29,9 @@ maxSize=65525 #jvm堆中最大的个数
 useToken=true #是否允许使用token  如果为是 支持uri后面传入token参数 或 http head头中传入token参数
 ```
 
-## 配置文件 session-redis-{env}.properties
+以上配置文件优先读取项目中的配置文件，读取不到会读取jar包中的.
 
-env 为springboot中指定的环境 如 uat,dev
+## 配置文件 application.yml或application.xml(支持统一配置中心)
 
 ```properties
 #######################
@@ -50,5 +50,3 @@ timeout=10000 #超时时间(单位毫秒)
 test_on_borrow=false #获取连接时是否验证连接有效
 database=0 #使用指定数据槽
 ```
-
-以上配置文件优先读取项目中的配置文件，读取不到会读取jar包中的.
