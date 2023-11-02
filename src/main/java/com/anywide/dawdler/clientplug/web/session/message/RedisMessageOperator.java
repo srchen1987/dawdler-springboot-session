@@ -64,15 +64,10 @@ public class RedisMessageOperator implements MessageOperator {
 		this.jedisPool = jedisPool;
 	}
 
-	// config set notify-keyspace-events Ex
-	// config set notify-keyspace-events AKE
-	// config set notify-keyspace-events gxE
 	private static void config(Jedis jedis) {
 		String parameter = "notify-keyspace-events";
 		List<String> notify = jedis.configGet(parameter);
 		if (notify.get(1).equals("")) {
-//          jedis.configSet(parameter, "Ex"); //过期事件
-//        	jedis.configSet(parameter, "AKE"); //全部事件 包括 hset 等
 			jedis.configSet(parameter, "gxE");// 过期与删除
 		}
 	}
@@ -181,7 +176,6 @@ public class RedisMessageOperator implements MessageOperator {
 					if (CHANNEL_ATTRIBUTE_CHANGE_RELOAD.equals(channel)) {
 						if (session.getSessionSign().equals(data[1]))
 							return;
-						session.clear();
 						try {
 							SessionOperator.reloadAttributes(sessionStore.getAttributes(session.getId()), session,
 									serializer);
@@ -204,31 +198,6 @@ public class RedisMessageOperator implements MessageOperator {
 				}
 			}
 		}
-
-//	    	// 初始化订阅时候的处理
-//	    	public void onSubscribe(String channel, int subscribedChannels) {
-//	    		 System.out.println("onSubscribe:"+channel + "=" + subscribedChannels);
-//	    	}
-//
-//	    	// 取消订阅时候的处理
-//	    	public void onUnsubscribe(String channel, int subscribedChannels) {
-//	    		 System.out.println("onUnsubscribe:"+channel + "=" + subscribedChannels);
-//	    	}
-//
-//	    	// 初始化按表达式的方式订阅时候的处理
-//	    	public void onPSubscribe(String pattern, int subscribedChannels) {
-//	    		 System.out.println("onPSubscribe:"+pattern + "=" + subscribedChannels);
-//	    	}
-//
-//	    	// 取消按表达式的方式订阅时候的处理
-//	    	public void onPUnsubscribe(String pattern, int subscribedChannels) {
-//	    		 System.out.println("onPUnsubscribe:"+pattern + "=" + subscribedChannels);
-//	    	}
-//
-//	    	// 取得按表达式的方式订阅的消息后的处理
-//	    	public void onPMessage(String pattern, String channel, String message) {
-//	    		System.out.println("onPMessage:"+pattern + "=" + channel + "=" + message);
-//	    	}
 
 	}
 }

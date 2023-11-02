@@ -64,14 +64,14 @@ public final class DistributedSessionRedisUtil {
 		poolConfig.setTestOnBorrow(jedisConfig.getTestOnBorrow());
 		String masterName = jedisConfig.getMasterName();
 		String sentinels = jedisConfig.getSentinels();
-		String userName = jedisConfig.getUserName();
+		String auth = jedisConfig.getAuth();
 		if (masterName != null && sentinels != null) {
 			String[] sentinelsArray = sentinels.split(",");
 			Set<String> sentinelsSet = Arrays.stream(sentinelsArray).collect(Collectors.toSet());
-			jedisPool = new JedisSentinelPool(masterName, sentinelsSet, poolConfig, jedisConfig.getTimeout(), userName, jedisConfig.getDatabase());
+			jedisPool = new JedisSentinelPool(masterName, sentinelsSet, poolConfig, jedisConfig.getTimeout(), auth, jedisConfig.getDatabase());
 		} else {
 			jedisPool = new JedisPool(poolConfig, jedisConfig.getAddr(), jedisConfig.getPort(),
-					jedisConfig.getTimeout(), userName, jedisConfig.getDatabase());
+					jedisConfig.getTimeout(), auth, jedisConfig.getDatabase());
 		}
 	}
 
