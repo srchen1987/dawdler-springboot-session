@@ -78,7 +78,9 @@ public class DawdlerSessionFilter implements Filter {
 	private static int maxSize = 65525;
 	private JedisConfig jedisConfig;
 //   private static int synFlushInterval = 0;
-	
+	private static String tokenName = "token";
+	private static boolean supportHead;
+	private static boolean supportParam;
 	public DawdlerSessionFilter(JedisConfig jedisConfig) {
 		this.jedisConfig = jedisConfig;
 	}
@@ -115,6 +117,21 @@ public class DawdlerSessionFilter implements Filter {
 			if (secureString != null) {
 				secure = Boolean.parseBoolean(secureString);
 			}
+			String supportParamString = ps.getProperty("supportParam");
+			if (supportParamString != null) {
+				supportParam = Boolean.parseBoolean(supportParamString);
+			}
+			
+			String supportHeadString = ps.getProperty("supportHead");
+			if (supportHeadString != null) {
+				supportHead = Boolean.parseBoolean(supportHeadString);
+			}
+			
+			String tokenNameString = ps.getProperty("tokenName");
+			if (tokenNameString != null && !tokenNameString.trim().equals("")) {
+				tokenName = tokenNameString;
+			}
+			
 
 			String maxInactiveIntervalString = ps.getProperty("maxInactiveInterval");
 			if (maxInactiveIntervalString != null) {
@@ -258,7 +275,27 @@ public class DawdlerSessionFilter implements Filter {
 		@Override
 		public HttpSession getSession(boolean create) {
 			if (session == null) {
-				String sessionKey = getCookieValue(request.getCookies(), cookieName);
+				String sessionKey;
+				String token = null;
+				if (supportHead) {
+					token = request.getHeader(tokenName);
+				}
+				if (token == null && supportParam) {
+					token = request.getParameter(tokenName);
+				}
+				if (token != null) {
+					sessionKey = token;
+				} else {
+					sessionKey = getCookieValue(request.getCookies(), cookieName);
+				}
+				if (sessionKey != null) {
+					try {
+						session = sessionOperator.operationSession(sessionKey, maxInactiveInterval);
+					} catch (Exception e) {
+						logger.error("", e);
+					}
+				}
+				
 				if (sessionKey != null) {
 					try {
 						session = sessionOperator.operationSession(sessionKey, maxInactiveInterval);
