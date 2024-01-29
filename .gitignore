@@ -1,7 +1,26 @@
-*.classpath
+*.class
+
+# Mobile To
+.mtj.tmp/
+
+# Package F
+*.war
+*.ear
+
+# idea IDE
+.idea/
+*.iml
 *.project
-*.settings
-/bin/
-**/.idea/
-.DS_Store
+
+# log file
+*.log
+
+#target fil
+target/
+bin/
+
 /target/
+.classpath
+.project
+.settings
+.vscode/settings.json

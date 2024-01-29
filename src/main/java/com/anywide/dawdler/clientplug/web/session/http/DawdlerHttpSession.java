@@ -23,12 +23,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionContext;
-
 import com.anywide.dawdler.clientplug.web.session.SessionOperator;
 import com.anywide.dawdler.clientplug.web.session.message.MessageOperator;
+
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpSession;
 
 /**
  * @author jackson.song
@@ -148,11 +147,7 @@ public class DawdlerHttpSession implements HttpSession {
 	public void setMaxInactiveInterval(int interval) {
 		this.maxInactiveInterval = interval;
 	}
-
-	@Override
-	public HttpSessionContext getSessionContext() {
-		return null;
-	}
+ 
 
 	@Override
 	public Object getAttribute(String name) {
@@ -160,19 +155,10 @@ public class DawdlerHttpSession implements HttpSession {
 	}
 
 	@Override
-	public Object getValue(String name) {
-		return getAttribute(name);
-	}
-
-	@Override
 	public Enumeration<String> getAttributeNames() {
 		return attributes.keys();
 	}
 
-	@Override
-	public String[] getValueNames() {
-		return attributes.keySet().toArray(new String[0]);
-	}
 
 	@Override
 	public void setAttribute(String name, Object value) {
@@ -201,11 +187,6 @@ public class DawdlerHttpSession implements HttpSession {
 	}
 
 	@Override
-	public void putValue(String name, Object value) {
-		setAttribute(name, value);
-	}
-
-	@Override
 	public void removeAttribute(String name) {
 		attributes.remove(name);
 		attributesAddNew.remove(name);
@@ -220,11 +201,6 @@ public class DawdlerHttpSession implements HttpSession {
 	public void removeAttributeFromNotify(String name) {
 		attributes.remove(name);
 		attributesAddNew.remove(name);
-	}
-
-	@Override
-	public void removeValue(String name) {
-		removeAttribute(name);
 	}
 
 	@Override

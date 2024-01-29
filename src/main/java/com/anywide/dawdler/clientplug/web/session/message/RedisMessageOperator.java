@@ -16,10 +16,7 @@
  */
 package com.anywide.dawdler.clientplug.web.session.message;
 
-import java.util.List;
-
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +28,8 @@ import com.anywide.dawdler.clientplug.web.session.store.RedisSessionStore;
 import com.anywide.dawdler.clientplug.web.session.store.SessionStore;
 import com.anywide.dawdler.core.serializer.Serializer;
 
+import jakarta.servlet.http.HttpSessionEvent;
+import jakarta.servlet.http.HttpSessionListener;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 import redis.clients.jedis.Pipeline;
@@ -69,11 +68,12 @@ public class RedisMessageOperator implements MessageOperator {
 	// config set notify-keyspace-events gxE
 	private static void config(Jedis jedis) {
 		String parameter = "notify-keyspace-events";
-		List<String> notify = jedis.configGet(parameter);
-		if (notify.get(1).equals("")) {
+		String gxE = "gxE";
+		Map<String, String> configSet = jedis.configGet(parameter);
+		if (configSet != null && !gxE.equals(configSet.get(parameter))) {
 //          jedis.configSet(parameter, "Ex"); //过期事件
 //        	jedis.configSet(parameter, "AKE"); //全部事件 包括 hset 等
-			jedis.configSet(parameter, "gxE");// 过期与删除
+			jedis.configSet(parameter, gxE);// 过期与删除
 		}
 	}
 

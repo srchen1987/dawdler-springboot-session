@@ -16,7 +16,6 @@
  */
 package com.anywide.dawdler.clientplug.web.session.conf;
 
-import javax.servlet.Filter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -24,6 +23,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.anywide.dawdler.clientplug.web.session.DawdlerSessionFilter;
+
+import jakarta.servlet.Filter;
 
 /**
  * @author jackson.song
