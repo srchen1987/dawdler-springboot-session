@@ -84,7 +84,11 @@ public class DawdlerSessionFilter implements Filter {
 		this.jedisConfig = jedisConfig;
 	}
 	static {
-		String filePath = DawdlerTool.getCurrentPath() + "identityConfig.properties";
+		String path = DawdlerTool.getCurrentPath();
+		String filePath = null;
+		if(path != null) {
+			 filePath = DawdlerTool.getCurrentPath() + "identityConfig.properties";
+		}
 		File file = new File(filePath);
 		InputStream inStream = null;
 		if (!file.isFile()) {

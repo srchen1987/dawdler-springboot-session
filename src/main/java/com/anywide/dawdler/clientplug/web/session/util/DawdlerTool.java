@@ -13,10 +13,16 @@ public class DawdlerTool {
 
 	public static String getCurrentPath() {
 		try {
-			return URLDecoder.decode(Thread.currentThread().getContextClassLoader().getResource("").getPath(), "utf-8");
-		} catch (UnsupportedEncodingException e) {
+			try {
+				return URLDecoder.decode(Thread.currentThread().getContextClassLoader().getResource("").getPath(),
+						"utf-8");
+			} catch (UnsupportedEncodingException e) {
+			}
+			return Thread.currentThread().getContextClassLoader().getResource("").getPath().replace("%20", " ");
+		} catch (Exception e) {
+			return null;
 		}
-		return Thread.currentThread().getContextClassLoader().getResource("").getPath().replace("%20", " ");
+
 	}
 
 }
