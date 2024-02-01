@@ -80,18 +80,21 @@ public class DawdlerSessionFilter implements Filter {
 	private static String tokenName = "token";
 	private static boolean supportHead;
 	private static boolean supportParam;
+
 	public DawdlerSessionFilter(JedisConfig jedisConfig) {
 		this.jedisConfig = jedisConfig;
 	}
+
 	static {
 		String path = DawdlerTool.getCurrentPath();
+		File file = null;
 		String filePath = null;
-		if(path != null) {
-			 filePath = DawdlerTool.getCurrentPath() + "identityConfig.properties";
+		if (path != null) {
+			filePath = path + "identityConfig.properties";
+			file = new File(filePath);
 		}
-		File file = new File(filePath);
 		InputStream inStream = null;
-		if (!file.isFile()) {
+		if (file == null || !file.isFile()) {
 			logger.warn("use  default identityConfig in dawdler-session jar!");
 			inStream = DawdlerSessionFilter.class.getResourceAsStream("/identityConfig.properties");
 		} else {
@@ -124,17 +127,16 @@ public class DawdlerSessionFilter implements Filter {
 			if (supportParamString != null) {
 				supportParam = Boolean.parseBoolean(supportParamString);
 			}
-			
+
 			String supportHeadString = ps.getProperty("supportHead");
 			if (supportHeadString != null) {
 				supportHead = Boolean.parseBoolean(supportHeadString);
 			}
-			
+
 			String tokenNameString = ps.getProperty("tokenName");
 			if (tokenNameString != null && !tokenNameString.trim().equals("")) {
 				tokenName = tokenNameString;
 			}
-			
 
 			String maxInactiveIntervalString = ps.getProperty("maxInactiveInterval");
 			if (maxInactiveIntervalString != null) {
@@ -298,7 +300,7 @@ public class DawdlerSessionFilter implements Filter {
 						logger.error("", e);
 					}
 				}
-				
+
 				if (sessionKey != null) {
 					try {
 						session = sessionOperator.operationSession(sessionKey, maxInactiveInterval);
