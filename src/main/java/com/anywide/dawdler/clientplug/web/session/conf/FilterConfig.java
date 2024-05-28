@@ -43,6 +43,7 @@ public class FilterConfig {
 		DawdlerSessionFilter dawdlerSessionFilter = new DawdlerSessionFilter(jedisConfig);
 		FilterRegistrationBean<Filter> registration = new FilterRegistrationBean<Filter>(dawdlerSessionFilter);
 		registration.addUrlPatterns("/*");
+		registration.setOrder(0);
 		return registration;
 	}
 }

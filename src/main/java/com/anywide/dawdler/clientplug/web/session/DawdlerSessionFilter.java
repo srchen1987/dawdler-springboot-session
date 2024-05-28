@@ -65,8 +65,6 @@ import redis.clients.jedis.util.Pool;
  * @date 2016年6月16日
  * @email suxuan696@gmail.com
  */
-@Order(0)
-@WebFilter(filterName = "DawdlerSessionFilter", urlPatterns = "/*")
 public class DawdlerSessionFilter implements Filter {
 	private static final Logger logger = LoggerFactory.getLogger(DawdlerSessionFilter.class);
 	public static String cookieName;
