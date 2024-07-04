@@ -35,6 +35,8 @@ import redis.clients.jedis.Protocol;
 public class JedisConfig {
 	private String auth;
 	private String userName;
+	private String sentinelUser;
+	private String sentinelPassword;
 	private Integer maxActive = JedisPoolConfig.DEFAULT_MAX_TOTAL;
 	private Integer maxIdle = JedisPoolConfig.DEFAULT_MAX_IDLE;
 	private Long maxWait = JedisPoolConfig.DEFAULT_MAX_WAIT.toMillis();
@@ -45,6 +47,8 @@ public class JedisConfig {
 	private String sentinels;
 	private String addr;
 	private Integer port;
+	private String clientName;
+	private String sentinelClientName;
 
 	public String getAuth() {
 		return auth;
@@ -141,5 +145,40 @@ public class JedisConfig {
 	public void setPort(Integer port) {
 		this.port = port;
 	}
+
+	public String getSentinelPassword() {
+		return sentinelPassword;
+	}
+
+	public void setSentinelPassword(String sentinelPassword) {
+		this.sentinelPassword = sentinelPassword;
+	}
+
+	public String getClientName() {
+		return clientName;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+	}
+
+	public String getSentinelUser() {
+		return sentinelUser;
+	}
+
+	public void setSentinelUser(String sentinelUser) {
+		this.sentinelUser = sentinelUser;
+	}
+
+	public String getSentinelClientName() {
+		return sentinelClientName;
+	}
+
+	public void setSentinelClientName(String sentinelClientName) {
+		this.sentinelClientName = sentinelClientName;
+	}
+
+	
+	
 
 }

@@ -27,6 +27,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisSentinelPool;
+import redis.clients.jedis.Protocol;
 import redis.clients.jedis.util.Pool;
 
 /**
@@ -70,8 +71,12 @@ public final class DistributedSessionRedisUtil {
 		if (masterName != null && sentinels != null) {
 			String[] sentinelsArray = sentinels.split(",");
 			Set<String> sentinelsSet = Arrays.stream(sentinelsArray).collect(Collectors.toSet());
-			jedisPool = new JedisSentinelPool(masterName, sentinelsSet, poolConfig, jedisConfig.getTimeout(), userName,
-					auth, jedisConfig.getDatabase());
+			jedisPool = new JedisSentinelPool(masterName, sentinelsSet,
+			 poolConfig,
+			 jedisConfig.getTimeout(), Protocol.DEFAULT_TIMEOUT,Protocol.DEFAULT_TIMEOUT,
+			 userName,auth,jedisConfig.getDatabase(), jedisConfig.getClientName(),
+			 jedisConfig.getTimeout(), Protocol.DEFAULT_TIMEOUT, jedisConfig.getSentinelUser(),
+			jedisConfig.getSentinelPassword(), jedisConfig.getSentinelClientName());
 		} else {
 			jedisPool = new JedisPool(poolConfig, jedisConfig.getAddr(), jedisConfig.getPort(),
 					jedisConfig.getTimeout(), userName, auth, jedisConfig.getDatabase());
