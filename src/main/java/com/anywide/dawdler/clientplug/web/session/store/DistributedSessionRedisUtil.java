@@ -73,7 +73,7 @@ public final class DistributedSessionRedisUtil {
 			Set<String> sentinelsSet = Arrays.stream(sentinelsArray).collect(Collectors.toSet());
 			jedisPool = new JedisSentinelPool(masterName, sentinelsSet,
 			 poolConfig,
-			 jedisConfig.getTimeout(), Protocol.DEFAULT_TIMEOUT,Protocol.DEFAULT_TIMEOUT,
+			 jedisConfig.getTimeout(), Protocol.DEFAULT_TIMEOUT, Protocol.DEFAULT_TIMEOUT,
 			 userName,auth,jedisConfig.getDatabase(), jedisConfig.getClientName(),
 			 jedisConfig.getTimeout(), Protocol.DEFAULT_TIMEOUT, jedisConfig.getSentinelUser(),
 			jedisConfig.getSentinelPassword(), jedisConfig.getSentinelClientName());
@@ -82,5 +82,5 @@ public final class DistributedSessionRedisUtil {
 					jedisConfig.getTimeout(), userName, auth, jedisConfig.getDatabase());
 		}
 	}
-
+	
 }
